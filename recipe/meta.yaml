@@ -1,5 +1,5 @@
 {% set name = "opentelemetry-instrumentation-together" %}
-{% set version = "0.56.0" %}
+{% set version = "0.56.1" %}
 {% set python_min = "3.10" %}
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/opentelemetry_instrumentation_together-{{ version }}.tar.gz
-  sha256: c498e0fb562f2d8a854419a9fa89fc5f216fe1e7528085c06047e63439e3d6d8
+  sha256: 0f4d942b4bc162075ae605d7e8e5a0e94885266349d756b4aa3b59f93b537b38
 
 build:
   noarch: python
