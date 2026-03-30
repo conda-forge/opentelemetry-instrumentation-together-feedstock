@@ -1,0 +1,57 @@
+From d1572d69ceef469ccb8c1950a876843176edf534 Mon Sep 17 00:00:00 2001
+From: Tim Paine <3105306+timkpaine@users.noreply.github.com>
+Date: Mon, 30 Mar 2026 13:09:33 -0400
+Subject: [PATCH] remove runtime together dependency
+
+---
+ .../instrumentation/together/event_emitter.py        | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/opentelemetry/instrumentation/together/event_emitter.py b/opentelemetry/instrumentation/together/event_emitter.py
+index e80ba6b..15d8989 100644
+--- a/opentelemetry/instrumentation/together/event_emitter.py
++++ b/opentelemetry/instrumentation/together/event_emitter.py
+@@ -1,6 +1,6 @@
+ from dataclasses import asdict
+ from enum import Enum
+-from typing import Union
++from typing import Union, TYPE_CHECKING
+ 
+ from opentelemetry._logs import Logger, LogRecord
+ from opentelemetry.instrumentation.together.event_models import (
+@@ -19,8 +19,8 @@ from opentelemetry.semconv_ai import (
+     LLMRequestTypeValues,
+ )
+ 
+-from together.types.chat_completions import ChatCompletionResponse
+-from together.types.completions import CompletionResponse
++if TYPE_CHECKING:
++    from together.types import ChatCompletionResponse, CompletionResponse
+ 
+ 
+ class Roles(Enum):
+@@ -59,10 +59,10 @@ def emit_prompt_events(event_logger, llm_request_type, kwargs):
+ def emit_completion_event(
+     event_logger,
+     llm_request_type,
+-    response: Union[ChatCompletionResponse, CompletionResponse],
++    response: Union["ChatCompletionResponse", "CompletionResponse"],
+ ):
+     if llm_request_type == LLMRequestTypeValues.CHAT:
+-        response: ChatCompletionResponse
++        response: "ChatCompletionResponse"
+         for choice in response.choices:
+             emit_event(
+                 CompletionEvent(
+@@ -76,7 +76,7 @@ def emit_completion_event(
+                 event_logger,
+             )
+     elif llm_request_type == LLMRequestTypeValues.COMPLETION:
+-        response: CompletionResponse
++        response: "CompletionResponse"
+         for choice in response.choices:
+             emit_event(
+                 CompletionEvent(
+-- 
+2.53.0
+
